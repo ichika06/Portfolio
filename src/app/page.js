@@ -1,7 +1,12 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import dynamic from "next/dynamic"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation, Pagination, Autoplay, EffectCoverflow } from "swiper/modules"
+import "swiper/css"
+import "swiper/css/navigation"
+import "swiper/css/pagination"
+import "swiper/css/effect-coverflow"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -20,17 +25,6 @@ import {
 import Image from "next/image"
 import { useState, useEffect } from "react"
 import LoadingScreen from "@/components/loading-screen"
-
-// Dynamic import for Swiper to prevent SSR issues
-const DynamicSwiper = dynamic(
-  () => import("swiper/react").then((mod) => mod.Swiper),
-  { ssr: false }
-)
-
-const DynamicSwiperSlide = dynamic(
-  () => import("swiper/react").then((mod) => mod.SwiperSlide),
-  { ssr: false }
-)
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -96,10 +90,8 @@ export default function Portfolio() {
   const [isLoading, setIsLoading] = useState(true)
   const [currentSection, setCurrentSection] = useState("hero")
   const [sectionLoading, setSectionLoading] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    setIsMounted(true)
     // Simulate initial loading
     const timer = setTimeout(() => {
       setIsLoading(false)
@@ -412,94 +404,83 @@ export default function Portfolio() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            {isMounted ? (
-              <DynamicSwiper
-                modules={[
-                  require("swiper/modules").Navigation,
-                  require("swiper/modules").Pagination,
-                  require("swiper/modules").Autoplay,
-                  require("swiper/modules").EffectCoverflow,
-                ]}
-                spaceBetween={30}
-                slidesPerView={1}
-                navigation
-                pagination={{ clickable: true }}
-                autoplay={{ delay: 5000 }}
-                loop={true}
-                effect="coverflow"
-                coverflowEffect={{
-                  rotate: 50,
-                  stretch: 0,
-                  depth: 100,
-                  modifier: 1,
-                  slideShadows: true,
-                }}
-                breakpoints={{
-                  640: { slidesPerView: 1 },
-                  768: { slidesPerView: 2 },
-                  1024: { slidesPerView: 3 },
-                }}
-                className="pb-12"
-              >
-                {projects.map((project) => (
-                  <DynamicSwiperSlide key={project.id}>
-                    <Card className="bg-gray-900/80 cursor-grab border-gray-800 hover:border-purple-400/50 transition-all duration-300 overflow-hidden group">
-                      <div className="relative overflow-hidden">
-                        <Image
-                          src={project.image || "/next.svg"}
-                          alt={project.title}
-                          width={500}
-                          height={300}
-                          className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
-                          {project.github !== "#" && (
-                            <Button 
-                              size="sm" 
-                              variant="outline" 
-                              className="border-purple-400 text-purple-400"
-                              asChild
-                            >
-                              <a href={project.github} target="_blank" rel="noopener noreferrer">
-                                <Github className="w-4 h-4 mr-2" />
-                                Code
-                              </a>
-                            </Button>
-                          )}
-                          {project.live !== "#" && (
-                            <Button
-                              size="sm"
-                              className="bg-purple-400 text-gray-200 hover:bg-purple-500"
-                              asChild
-                            >
-                              <a href={project.live} target="_blank" rel="noopener noreferrer">
-                                <ExternalLink className="w-4 h-4 mr-2" />
-                                Live
-                              </a>
-                            </Button>
-                          )}
-                        </div>
+            <Swiper
+              modules={[Navigation, Pagination, Autoplay, EffectCoverflow]}
+              spaceBetween={30}
+              slidesPerView={1}
+              navigation
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 5000 }}
+              loop={true}
+              effect="coverflow"
+              coverflowEffect={{
+                rotate: 50,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true,
+              }}
+              breakpoints={{
+                640: { slidesPerView: 1 },
+                768: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 },
+              }}
+              className="pb-12"
+            >
+              {projects.map((project) => (
+                <SwiperSlide key={project.id}>
+                  <Card className="bg-gray-900/80 cursor-grab border-gray-800 hover:border-purple-400/50 transition-all duration-300 overflow-hidden group">
+                    <div className="relative overflow-hidden">
+                      <Image
+                        src={project.image || "/next.svg"}
+                        alt={project.title}
+                        width={500}
+                        height={300}
+                        className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
+                        {project.github !== "#" && (
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="border-purple-400 text-purple-400"
+                            asChild
+                          >
+                            <a href={project.github} target="_blank" rel="noopener noreferrer">
+                              <Github className="w-4 h-4 mr-2" />
+                              Code
+                            </a>
+                          </Button>
+                        )}
+                        {project.live !== "#" && (
+                          <Button
+                            size="sm"
+                            className="bg-purple-400 text-gray-200 hover:bg-purple-500"
+                            asChild
+                          >
+                            <a href={project.live} target="_blank" rel="noopener noreferrer">
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                              Live
+                            </a>
+                          </Button>
+                        )}
                       </div>
-                      <CardContent className="p-6">
-                        <h3 className="text-xl font-bold mb-3 text-gray-200">{project.title}</h3>
-                        <p className="text-gray-400 mb-4 text-sm">{project.description}</p>
-                        <div className="flex flex-wrap gap-2">
-                          {project.tech.map((tech) => (
-                            <Badge key={tech} variant="outline" className="border-gray-600 text-gray-300 text-xs">
-                              {tech}
-                            </Badge>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </DynamicSwiperSlide>
-                ))}
-              </DynamicSwiper>
-            ) : (
-              <div className="flex justify-center items-center h-64">
-                <div className="text-purple-400">Loading projects...</div>
-              </div>
-            )}
+                    </div>
+                    <CardContent className="p-6">
+                      <h3 className="text-xl font-bold mb-3 text-gray-200">{project.title}</h3>
+                      <p className="text-gray-400 mb-4 text-sm">{project.description}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {project.tech.map((tech) => (
+                          <Badge key={tech} variant="outline" className="border-gray-600 text-gray-300 text-xs">
+                            {tech}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </motion.div>
         </div>
       </section>
