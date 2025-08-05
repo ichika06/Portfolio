@@ -7,6 +7,8 @@ import Image from "next/image"
 export default function LoadingScreen() {
   const [progress, setProgress] = useState(0)
   const [loadingText, setLoadingText] = useState("Initializing...")
+  const [dimensions, setDimensions] = useState({ width: 1200, height: 800 })
+  const [particles, setParticles] = useState([])
 
   const loadingSteps = [
     "Initializing...",
@@ -15,16 +17,29 @@ export default function LoadingScreen() {
   ]
 
   useEffect(() => {
+    // Set dimensions and generate particles on client side only
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight
+    })
+
+    // Generate particle data once on client side
+    const particleData = [...Array(20)].map((_, i) => ({
+      id: i,
+      x: Math.random() * window.innerWidth,
+      duration: Math.random() * 3 + 2,
+      delay: Math.random() * 2,
+    }))
+    setParticles(particleData)
+
     const interval = setInterval(() => {
       setProgress((prev) => {
         const newProgress = prev + 2
 
         // Update loading text based on progress
-        if (newProgress < 20) setLoadingText(loadingSteps[0])
-        else if (newProgress < 40) setLoadingText(loadingSteps[1])
-        else if (newProgress < 60) setLoadingText(loadingSteps[2])
-        else if (newProgress < 80) setLoadingText(loadingSteps[3])
-        else setLoadingText(loadingSteps[4])
+        if (newProgress < 33) setLoadingText(loadingSteps[0])
+        else if (newProgress < 66) setLoadingText(loadingSteps[1])
+        else setLoadingText(loadingSteps[2])
 
         return newProgress >= 100 ? 100 : newProgress
       })
@@ -106,12 +121,12 @@ export default function LoadingScreen() {
 
         {/* Floating Particles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(20)].map((_, i) => (
+          {particles.map((particle) => (
             <motion.div
-              key={i}
+              key={particle.id}
               initial={{
-                x: Math.random() * window.innerWidth,
-                y: window.innerHeight + 10,
+                x: particle.x,
+                y: dimensions.height + 10,
                 opacity: 0,
               }}
               animate={{
@@ -119,9 +134,9 @@ export default function LoadingScreen() {
                 opacity: [0, 1, 0],
               }}
               transition={{
-                duration: Math.random() * 3 + 2,
+                duration: particle.duration,
                 repeat: Number.POSITIVE_INFINITY,
-                delay: Math.random() * 2,
+                delay: particle.delay,
               }}
               className="absolute w-1 h-1 bg-purple-200 rounded-full"
             />
