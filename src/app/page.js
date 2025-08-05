@@ -439,20 +439,31 @@ export default function Portfolio() {
                         className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-300"
                       />
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
-                        <Button size="sm" variant="outline" className="border-purple-400 text-purple-400">
-                          <Github className="w-4 h-4 mr-2" />
-                          Code
-                        </Button>
-                        <Button
-                          size="sm"
-                          className="bg-purple-400 text-gray-200 hover:bg-purple-500"
-                          asChild
-                        >
-                          <a href={project.live} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="w-4 h-4 mr-2" />
-                            Live
-                          </a>
-                        </Button>
+                        {project.github !== "#" && (
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="border-purple-400 text-purple-400"
+                            asChild
+                          >
+                            <a href={project.github} target="_blank" rel="noopener noreferrer">
+                              <Github className="w-4 h-4 mr-2" />
+                              Code
+                            </a>
+                          </Button>
+                        )}
+                        {project.live !== "#" && (
+                          <Button
+                            size="sm"
+                            className="bg-purple-400 text-gray-200 hover:bg-purple-500"
+                            asChild
+                          >
+                            <a href={project.live} target="_blank" rel="noopener noreferrer">
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                              Live
+                            </a>
+                          </Button>
+                        )}
                       </div>
                     </div>
                     <CardContent className="p-6">
