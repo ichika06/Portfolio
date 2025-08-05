@@ -443,17 +443,15 @@ export default function Portfolio() {
                           <Github className="w-4 h-4 mr-2" />
                           Code
                         </Button>
-                        <Button 
-                          size="sm" 
-                          className="bg-purple-400 text-gray-200 hover:bg-purple-500" 
-                          onClick={() => {
-                            if (typeof window !== 'undefined') {
-                              window.open(project.live, "_blank")
-                            }
-                          }}
+                        <Button
+                          size="sm"
+                          className="bg-purple-400 text-gray-200 hover:bg-purple-500"
+                          asChild
                         >
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          Live
+                          <a href={project.live} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Live
+                          </a>
                         </Button>
                       </div>
                     </div>
